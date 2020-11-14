@@ -1,10 +1,12 @@
 import React from 'react';
 import Alert from 'react-bootstrap/Alert';
 
-const RegistrationForm = ({ person: initialPerson, text: initialText, testRegister }) => {
+// Removed unnecessary testRegister function from params
+// - Ava 11/14/2020
+const RegistrationForm = ({ person: initialPerson, text: initialText }) => {
   const [person, setPerson] = React.useState(initialPerson);
   const [text, setText] = React.useState(initialText);
-  const [showAlert, setShowAlert] = React.useState(false);
+  const [show, setShow] = React.useState(false);
   const handleChange = ({ target }) => {
     const { name, value } = target;
     setPerson((p) => ({ ...p, [name]: value }));
@@ -15,7 +17,7 @@ const RegistrationForm = ({ person: initialPerson, text: initialText, testRegist
       person.firstName + " " + person.lastName + 
       ' has successfully registered! '
     );
-    setShowAlert(true);
+    setShow(true);
   }
 
   return (
@@ -80,29 +82,32 @@ const RegistrationForm = ({ person: initialPerson, text: initialText, testRegist
 
         <p style={{ color: "red" }}>* indicates required field</p>
 
+        {
+          /* Simplified onClick method by removing
+          unnecessary testRegister method 
+          - Ava 11/14/2020 */
+        }
         <div className="float-right">
           <button
             disabled={!person.firstName || !person.lastName}
-            onClick={() => {
-              if (typeof testRegister === "function") {
-                testRegister(person)
-              } else {
-                onRegister(person);
-            }}}
+            onClick={() => {onRegister(person)}}
             className="btn btn-primary"
           >Register</button>
         </div>
       </div>
     </div>
 
-    {showAlert &&
-    <Alert variant="success">
+    <Alert 
+      variant="success" 
+      style={!show ? { display: "none"} : {display: "block"}}
+      data-testid="alert"
+      onClose={() => setShow(false)}
+      dismissible
+    >
       <p>
         {text}
-        <br />
-        You may now close this window.
       </p>
-    </Alert>}
+    </Alert>
 
     </div>
   )

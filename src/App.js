@@ -1,15 +1,12 @@
 import React from 'react';
 import RegistrationForm from './registration/RegistrationForm';
 
+// Simplified App function by removing unnecessary testRegister
+// property from RegistrationForm - Ava 11/14/2020
 function App() {
   return (
     <div>
-      {
-        /* using the onRegister function as a place holder
-        for now so that app does not crash when Register button is pressed */
-        // Todo: Create onRegister function
-      }
-      <RegistrationForm testRegister="" />
+      <RegistrationForm />
     </div>
   );
 }

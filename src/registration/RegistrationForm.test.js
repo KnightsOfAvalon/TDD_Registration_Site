@@ -31,8 +31,7 @@ describe('The RegistrationForm', () => {
       country: "Netherlands",
       state: ''
     }
-    render(
-      <RegistrationForm person={testPerson} />);
+    render(<RegistrationForm person={testPerson} />);
 
     expect(screen.getByText('Registration')).toBeVisible();
     expect(screen.getByText('Register')).toBeEnabled();
@@ -40,10 +39,12 @@ describe('The RegistrationForm', () => {
     expect(screen.getByLabelText("Last Name")).toHaveValue("Matthew");
     expect(screen.getByLabelText("Country")).toHaveValue("Netherlands");
     expect(screen.queryByLabelText("State")).not.toBeInTheDocument();
+    // Added test portion for Alert - Ava 11/14/2020
+    expect(screen.queryByTestId("alert")).not.toBeVisible();
   });
 
-  // Checks whether the RegistrationForm component is populated with
-  // specific data for a person from the USA.
+  // Checks whether the RegistrationForm component is populated
+  // with specific data for a person from the USA.
   test('render the populated registration form for person in USA', () => {
     const testPerson = {
       firstName: "Chuck",
@@ -59,23 +60,40 @@ describe('The RegistrationForm', () => {
     expect(screen.getByLabelText("Last Name")).toHaveValue("Norris");
     expect(screen.getByLabelText("Country")).toHaveValue("USA");
     expect(screen.getByLabelText("State")).toHaveValue("Texas");
+    // Added test portion for Alert - Ava 11/14/2020
+    expect(screen.queryByTestId("alert")).not.toBeVisible();
   });
 
   test('register a person', () => {
-    const testRegister = jest.fn();
-
-    render(<RegistrationForm testRegister={testRegister} />);
+    render(<RegistrationForm />);
 
     fireEvent.change(screen.getByLabelText("First Name"), {target: { name: "firstName", value: "Mike"}});
     fireEvent.change(screen.getByLabelText("Last Name"), {target: { name: "lastName", value: "Harris"}});
 
     fireEvent.click(screen.getByText("Register"));
 
-    expect(testRegister).toHaveBeenCalledWith ({
-      firstName: "Mike",
-      lastName: "Harris",
-      country: "{Country Not Given}",
-      state: ""
-    });
+    // Changed test to check that onRegister method had expected
+    // output (alert shown on screen) rather than checking
+    // that the method had been called with the correct args.
+    // - Ava 11/14/2020
+    expect(screen.getByText("Mike Harris has successfully registered!")).toBeInTheDocument();
+    expect(screen.getByTestId("alert")).toBeVisible();
   });
+
+  // New test to ensure alert closes after close button
+  // is pressed - Ava 11/14/2020
+  test('alert is properly closed', () =>{
+    render(<RegistrationForm />);
+
+    // Needed to get alert to show
+    fireEvent.change(screen.getByLabelText("First Name"), {target: { name: "firstName", value: "Mike"}});
+    fireEvent.change(screen.getByLabelText("Last Name"), {target: { name: "lastName", value: "Harris"}});
+    fireEvent.click(screen.getByText("Register"));
+
+    // Trigger close
+    fireEvent.click(screen.getByText("Close alert"));
+
+    // Expected output
+    expect(screen.getByTestId('alert')).not.toBeVisible();
+  })
 });
