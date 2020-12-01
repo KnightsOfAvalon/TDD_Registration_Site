@@ -1,3 +1,6 @@
+View this app in your web browser using the following URL:
+https://knightsofavalon.github.io/TDD_Registration_Site/
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
